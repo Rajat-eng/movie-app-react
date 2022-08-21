@@ -1,30 +1,72 @@
-
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import {data} from '../data';
-function App() {
-  return (
-    <div className="App">
-     <Navbar />
-     <div className="main">
+import React from 'react';
+import { addMovies, setShowFavorites } from '../actions';
+
+class App extends React.Component {
+  
+   componentDidMount(){
+    // call api and dispatch
+    const {store}=this.props;
+
+    store.subscribe(()=>{
+      this.forceUpdate(); // method should not be used
+    })
+
+    store.dispatch(addMovies(data))
+
+   }
+
+   isMovieFavorite=(movie)=>{
+      const {movies}=this.props.store.getState();
+      const index=movies.favorites.indexOf(movie)
+
+      if(index===-1){
+        return false;
+      }
+      return true;
+   }
+
+   onChangeTab=(val)=>{
+      this.props.store.dispatch(setShowFavorites(val));
+   }
+
+   render(){
+    const{movies}=this.props.store.getState()//{movies:{list,favorites,showFavorites} search:{result}}
+    const {list,favorites,showFavorites}=movies; 
+    const displayMovies=showFavorites? favorites:list
+    //console.log(displayMovies,showFavorites);
+
+      return (
+        <div className="App">
+        <Navbar />
+        <div className="main">
+
       <div className="tabs">
-        <div className="tab">Movies</div>
-        <div className="tab">Favorites</div>
+
+        <div className={` tab ${showFavorites}?'':'active-tabs' `} onClick={()=>this.onChangeTab(false)}>Movies</div>
+        <div className={` tab ${showFavorites}?'active-tabs':'' `} onClick={()=>this.onChangeTab(true)}>Favorites</div>
+
       </div>
 
       <div className="list">
-        {data.map(movie=>{
+        {displayMovies.map((movie,index)=>{
           return(
-            <MovieCard movie={movie} />
+            <MovieCard 
+            movie={movie} 
+            isFavorite={this.isMovieFavorite(movie)}
+            key={`movies-${index}`} 
+            dispatch={this.props.store.dispatch}  />
           )
-          
-        })
-          
-        }
+        })}
+        {displayMovies.length===0?<div className='no-movies'>No Movies to show</div>:null}
       </div>
      </div>
     </div>
   );
+ }
+  
 }
 
 export default App;

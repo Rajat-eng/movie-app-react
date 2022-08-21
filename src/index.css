@@ -26,9 +26,7 @@ body {
   padding: 0 10px;
   box-sizing: border-box;
 }
-.search-container {
-  position: relative;
-}
+
 .search-results {
   position: absolute;
   background: #fff;
@@ -169,11 +167,11 @@ body {
   border: none;
   font-weight: 600;
 }
-.favourite-btn {
+.favorite-btn {
   background-color: #2185d0;
   color: #fff;
 }
-.unfavourite-btn {
+.unfavorite-btn {
   background-color: #db2828;
   color: #fff;
   text-shadow: none;
