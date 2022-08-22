@@ -3,6 +3,8 @@ import MovieCard from './MovieCard';
 import {data} from '../data';
 import React from 'react';
 import { addMovies, setShowFavorites } from '../actions';
+import {StoreContext} from '../index';
+import{useSelector,useDispatch} from 'react-redux';
 
 class App extends React.Component {
   
@@ -33,14 +35,17 @@ class App extends React.Component {
    }
 
    render(){
-    const{movies}=this.props.store.getState()//{movies:{list,favorites,showFavorites} search:{result}}
+    const{movies,search}=this.props.store.getState()//{movies:{list,favorites,showFavorites} search:{result,showSearchResults}}
     const {list,favorites,showFavorites}=movies; 
-    const displayMovies=showFavorites? favorites:list
-    //console.log(displayMovies,showFavorites);
 
-      return (
-        <div className="App">
-        <Navbar />
+    const displayMovies=showFavorites? favorites:list
+    
+    //console.log(displayMovies);
+    return (
+      <div className="App">
+        <Navbar 
+          search={search} 
+          dispatch={this.props.store.dispatch} />
         <div className="main">
 
       <div className="tabs">
@@ -68,5 +73,6 @@ class App extends React.Component {
  }
   
 }
+
 
 export default App;
